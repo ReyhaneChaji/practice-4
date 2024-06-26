@@ -1,36 +1,64 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const userContainer = document.getElementById("user-container");
+  document.addEventListener("DOMContentLoaded", () => {
+            const cartContainer = document.getElementById("cart-container");
 
-  async function fetchUsers() {
-    try {
-      const response = await fetch("https://dummyjson.com/users");
-      const json = await response.json();
-      displayUsers(json.users);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  }
+            async function fetchCart() {
+                try {
+                    const response = await fetch("https://dummyjson.com/carts");
+                    const json = await response.json();
+                    displayCart(json.carts);
+                } catch (error) {
+                    console.error("Error fetching cart:", error);
+                }
+            }
 
-  function displayUsers(users) {
-    users.forEach(user => {
-      const userDiv = document.createElement("div");
-      userDiv.className = "user";
+            function displayCart(carts) {
+                carts.forEach(cart => {
+                    const cartDiv = document.createElement("div");
+                    cartDiv.className = "cart";
 
-      const userAvatar = document.createElement("img");
-      userAvatar.src = user.image;
-      userDiv.appendChild(userAvatar);
+                    const cartTitle = document.createElement("h2");
+                    cartTitle.className = "cart-title";
+                    cartTitle.innerText = `Cart ID: ${cart.id}`;
+                    cartDiv.appendChild(cartTitle);
 
-      const userName = document.createElement("p");
-      userName.innerHTML = `<h2>${user.firstName} ${user.lastName}</h2>`;
-      userDiv.appendChild(userName);
+                    const productsDiv = document.createElement("div");
+                    productsDiv.className = "products";
 
-      const userEmail = document.createElement("p");
-      userEmail.innerHTML = `<strong>${user.email}</strong>`;
-      userDiv.appendChild(userEmail);
+                    cart.products.forEach(product => {
+                        const productDiv = document.createElement("div");
+                        productDiv.className = "product";
 
-      userContainer.appendChild(userDiv);
-    });
-  }
+                        const productThumbnail = document.createElement("img");
+                        productThumbnail.src = product.thumbnail;
+                        productDiv.appendChild(productThumbnail);
 
-  fetchUsers();
-});
+                        const productTitle = document.createElement("h2");
+                        productTitle.innerHTML = product.title;
+                        productDiv.appendChild(productTitle);
+
+                        const productPrice = document.createElement("p");
+                        productPrice.innerHTML = `<strong>Price: $${product.price}</strong>`;
+                        productDiv.appendChild(productPrice);
+
+                        const productQuantity = document.createElement("p");
+                        productQuantity.innerHTML = `<strong>Quantity: ${product.quantity}</strong>`;
+                        productDiv.appendChild(productQuantity);
+
+                        const productTotal = document.createElement("p");
+                        productTotal.innerHTML = `<strong>Total: $${product.total}</strong>`;
+                        productDiv.appendChild(productTotal);
+
+                        const productDiscountedTotal = document.createElement("p");
+                        productDiscountedTotal.innerHTML = `<strong>Discounted Total: $${product.discountedTotal}</strong>`;
+                        productDiv.appendChild(productDiscountedTotal);
+
+                        productsDiv.appendChild(productDiv);
+                    });
+
+                    cartDiv.appendChild(productsDiv);
+                    cartContainer.appendChild(cartDiv);
+                });
+            }
+
+            fetchCart();
+        });
